@@ -70,7 +70,7 @@ int main() {
 
   // MPC is initialized here!
   MPC mpc;
-
+  
   h.onMessage([&mpc](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
                      uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
@@ -98,8 +98,11 @@ int main() {
           * Both are in between [-1, 1].
           *
           */
-          double steer_value;
-          double throttle_value;
+		  double Lf = 2.67;
+		  vector<double> control_inputs = mpc.Solve(state, coeffs);
+
+          double steer_value = control_inputs[0] / (deg2rad(25)*Lf);
+          double throttle_value = control_inputs[1];
 
           json msgJson;
           // NOTE: Remember to divide by deg2rad(25) before you send the steering value back.
