@@ -91,8 +91,8 @@ int main() {
           double py = j[1]["y"];
           double psi = j[1]["psi"];
           double v = j[1]["speed"];
-		  //double steer_value = j[1]["steering_angle"];
-          //double throttle_value = j[1]["throttle"];
+		  double steer_value = j[1]["steering_angle"];
+          double throttle_value = j[1]["throttle"];
 
           /*
           * TODO: Calculate steering angle and throttle using MPC.
@@ -122,10 +122,15 @@ int main() {
 		  double epsi = -atan(coeffs[1]); // Orientation error
 		  
 		  double Lf = 2.67; // Center of gravity 
-		  //const double dt = 0.1; // Delta time latency
+		  const double dt = 0.1; // Delta time latency
 		  
 		  Eigen::VectorXd state(6);
-          state << 0, 0, 0, v, cte, epsi;
+		  double pred_px = v * dt; 
+          double pred_psi = v * -steer_value / Lf * dt;
+          double pred_v = v + throttle_value * dt;
+          double pred_cte = cte + v * sin(epsi) * dt;
+          double pred_epsi = epsi + v * -steer_value / Lf * dt;
+          state << pred_px, 0, pred_psi, pred_v, pred_cte, pred_epsi;
    
    
 		  auto controls = mpc.Solve(state, coeffs);
@@ -143,10 +148,11 @@ int main() {
 
           //.. add (x,y) points to list here, points are in reference to the vehicle's coordinate system
           // the points in the simulator are connected by a Yellow line
+		  double poly_inc = 2.5;
 		  for (int i = 1; i < 25; i++) 
 		  {
-            next_x_vals.push_back(2.5 * i);
-            next_y_vals.push_back(polyeval (coeffs,i * 2.5));
+            next_x_vals.push_back(poly_inc * i);
+            next_y_vals.push_back(polyeval (coeffs,i * poly_inc));
           }
 		  
           msgJson["next_x"] = next_x_vals;

@@ -7,7 +7,7 @@
 using CppAD::AD;
 
 // TODO: Set the timestep length and duration
-size_t N = 10;
+size_t N = 15;
 double dt = 0.1;
 
 // This value assumes the model presented in the classroom is used.
@@ -54,14 +54,14 @@ class FG_eval
 	fg[0] = 0;
 	
 	const int v_weight = 1;
-    const int a_weight = 5;
+    const int a_weight = 1;
 	
     const int cte_weight = 2000;
     const int epsi_weight = 2000;
 
     const int delta_weight = 5;
-    const int delta_change_weight = 200;
-    const int a_change_weight = 10;
+    const int delta_change_weight = 100;
+    const int a_change_weight = 1;
     
     // Cost for state : cte, psi error and velocity
     for (unsigned int t = 0; t < N; t++) 
@@ -149,7 +149,7 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   // element vector and there are 10 timesteps. The number of variables is:
   //
   // 4 * 10 + 2 * 9
-  double state_timesteps = state.size() * N;
+  double state_timesteps = 6 * N;
   size_t n_vars = state_timesteps + 2 * (N-1);
   // TODO: Set the number of constraints
   size_t n_constraints = state_timesteps;
@@ -175,14 +175,14 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   // Limits of delta were set to -25 and 25 degrees (the values is in radians)
   for (; i< a_start; i++) 
   {
-    vars_lowerbound[i] = -0.436332*Lf;
-    vars_upperbound[i] = 0.436332*Lf;
+    vars_lowerbound[i] = -1.0;  
+    vars_upperbound[i] = 1.0; 
   }
   // Acceleration upper and lower limits
   for (; i< n_vars; i++) 
   {
-    vars_lowerbound[i] = -1.0;
-    vars_upperbound[i] = 1.0;
+    vars_lowerbound[i] = -0.436332*Lf;
+    vars_upperbound[i] = 0.436332*Lf;
   }
   
   // Lower and upper limits for the constraints
@@ -246,10 +246,10 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   vector<double> actuator;
   actuator.push_back(solution.x[delta_start]);
   actuator.push_back(solution.x[a_start]);
-  for (i = 0; i < N; i++) 
+  for (i = 0; i < N-1; i++) 
   {
-    actuator.push_back(solution.x[x_start + i]);
-    actuator.push_back(solution.x[y_start + i]);
+    actuator.push_back(solution.x[x_start + i+1]);
+    actuator.push_back(solution.x[y_start + i+1]);
   }
   
   return actuator;
