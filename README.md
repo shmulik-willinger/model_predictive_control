@@ -28,9 +28,10 @@ The state update and error equations based on the vehicle model are the main par
 
 ![]( https://github.com/shmulik-willinger/model_predictive_control/blob/master/readme_img/MPC_loop.jpg?raw=true)
 
+The blue line is the reference trajectory and the red line is the trajectory computed by the 'model predictive control'
+
 ![]( https://github.com/shmulik-willinger/model_predictive_control/blob/master/readme_img/reference_trajectory.jpg?raw=true)
 
-The blue line is the reference trajectory and the red line is the trajectory computed by the 'model predictive control' 
 
 #### Timestep Length and Elapsed Duration
 
