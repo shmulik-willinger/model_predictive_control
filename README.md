@@ -54,6 +54,10 @@ There is a 100ms delay need to be take of, so I set the Delta time latency value
 
 I set the max speed of the car to 100 mph, since the car can drive smoothly at this speed, and on higher speed I observed some strong braking at the corners (and the speed is not the main issue at this project)
 
+#### Process results
+The vehicle successfully drive a lap around the track. No tire leave the drivable portion of the track surface. The car can go up to 100 mph on the track, while smoothly slowing down in the curves.
+
+
 Dependencies and Executing
 ---
 
